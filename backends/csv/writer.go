@@ -4,14 +4,14 @@ import (
 	"encoding/csv"
 	"fmt"
 
-	"github.com/qor/exchange"
-	"github.com/qor/qor"
-	"github.com/qor/qor/resource"
-	"github.com/qor/roles"
+	"github.com/aghape/core"
+	"github.com/aghape/core/resource"
+	"github.com/aghape/exchange"
+	"github.com/aghape/roles"
 )
 
 // NewWriter new csv writer
-func (c *CSV) NewWriter(res *exchange.Resource, context *qor.Context) (exchange.Writer, error) {
+func (c *CSV) NewWriter(res *exchange.Resource, context *core.Context) (exchange.Writer, error) {
 	writer := &Writer{CSV: c, Resource: res, context: context}
 
 	var metas []*exchange.Meta
@@ -34,7 +34,7 @@ func (c *CSV) NewWriter(res *exchange.Resource, context *qor.Context) (exchange.
 // Writer CSV writer struct
 type Writer struct {
 	*CSV
-	context  *qor.Context
+	context  *core.Context
 	Resource *exchange.Resource
 	Writer   *csv.Writer
 	metas    []*exchange.Meta

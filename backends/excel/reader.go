@@ -5,13 +5,13 @@ import (
 	"strings"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
-	"github.com/qor/exchange"
-	"github.com/qor/qor"
-	"github.com/qor/qor/resource"
+	"github.com/aghape/exchange"
+	"github.com/aghape/core"
+	"github.com/aghape/core/resource"
 )
 
 // NewReader new csv reader
-func (excel *Excel) NewReader(res *exchange.Resource, context *qor.Context) (exchange.Rows, error) {
+func (excel *Excel) NewReader(res *exchange.Resource, context *core.Context) (exchange.Rows, error) {
 	var rows = Rows{Excel: excel, Resource: res}
 
 	readCloser, err := excel.getReader()

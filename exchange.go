@@ -4,18 +4,32 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/jinzhu/gorm"
-	"github.com/qor/qor"
-	"github.com/qor/qor/resource"
-	"github.com/qor/roles"
-	"github.com/qor/validations"
+	"github.com/aghape/plug"
+
+	"github.com/moisespsena/go-edis"
+	"github.com/moisespsena/go-path-helpers"
+
+	"github.com/aghape/core"
+	"github.com/aghape/core/resource"
+	"github.com/aghape/roles"
+	"github.com/aghape/validations"
+	"github.com/moisespsena-go/aorm"
 )
+
+var PKG = path_helpers.GetCalledDir()
 
 // Resource defined an exchange resource, which includes importing/exporting fields definitions
 type Resource struct {
 	*resource.Resource
 	Config *Config
 	Metas  []*Meta
+}
+
+type Exchange struct {
+	edis.EventDispatcher
+
+	FakeDB    *aorm.DB
+	resources map[string]*Resource
 }
 
 // Config is exchange resource config
@@ -30,8 +44,9 @@ type Config struct {
 }
 
 // NewResource new exchange Resource
-func NewResource(value interface{}, config ...Config) *Resource {
-	res := Resource{Resource: resource.New(value)}
+func (e *Exchange) NewResource(value interface{}, config ...Config) *Resource {
+	res := Resource{Resource: resource.New(e.FakeDB.NewScope(value), "", "")}
+
 	if len(config) > 0 {
 		res.Config = &config[0]
 	} else {
@@ -45,6 +60,13 @@ func NewResource(value interface{}, config ...Config) *Resource {
 		}
 	}
 	return &res
+}
+
+func (e *Exchange) AddResource(key string, value interface{}, config ...Config) (res *Resource) {
+	res = e.NewResource(value, config...)
+	e.resources[key] = res
+	e.Trigger(&ResourceAddedEvent{plug.NewEvent(E_RESOURCE_ADDED), e, res})
+	return
 }
 
 // Meta define exporting/importing meta for exchange Resource
@@ -84,7 +106,7 @@ type errorsInterface interface {
 
 // Import used to import data into a exchange Resource
 //     product.Import(csv.New("products.csv"), context)
-func (res *Resource) Import(container Container, context *qor.Context, callbacks ...func(Progress) error) error {
+func (res *Resource) Import(container Container, context *core.Context, callbacks ...func(Progress) error) error {
 	rows, err := container.NewReader(res, context)
 	if err == nil {
 		var hasError bool
@@ -138,7 +160,7 @@ func (res *Resource) Import(container Container, context *qor.Context, callbacks
 						var err error = err
 						cell := progress.Cells[0]
 						if cell.Error != nil {
-							var errors qor.Errors
+							var errors core.Errors
 							errors.AddError(cell.Error)
 							errors.AddError(err)
 							err = errors
@@ -147,12 +169,13 @@ func (res *Resource) Import(container Container, context *qor.Context, callbacks
 					}
 				}
 
-				result := res.NewStruct()
+				result := res.NewStruct(context.Site)
 				progress.Value = result
+				crud := res.Crud(context)
 
-				if err = res.FindOneHandler(result, metaValues, context); err == nil || err == gorm.ErrRecordNotFound {
+				if err = crud.SetMetaValues(metaValues).FindOne(result); err == nil || aorm.IsRecordNotFoundError(err) {
 					if err = resource.DecodeToResource(res, result, metaValues, context).Start(); err == nil {
-						if err = res.CallSave(result, context); err != nil {
+						if err = crud.SaveOrCreate(result); err != nil {
 							handleError(err)
 						}
 					} else {
@@ -175,7 +198,7 @@ func (res *Resource) Import(container Container, context *qor.Context, callbacks
 
 // Export used export data from a exchange Resource
 //     product.Export(csv.New("products.csv"), context)
-func (res *Resource) Export(container Container, context *qor.Context, callbacks ...func(Progress) error) error {
+func (res *Resource) Export(container Container, context *core.Context, callbacks ...func(Progress) error) error {
 	var (
 		total   uint
 		results = res.NewSlice()

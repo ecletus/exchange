@@ -8,12 +8,12 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/qor/exchange"
-	csv_adaptor "github.com/qor/exchange/backends/csv"
-	"github.com/qor/exchange/tests"
-	"github.com/qor/qor"
-	"github.com/qor/qor/resource"
-	"github.com/qor/qor/test/utils"
+	"github.com/aghape/exchange"
+	csv_adaptor "github.com/aghape/exchange/backends/csv"
+	"github.com/aghape/exchange/tests"
+	"github.com/aghape/core"
+	"github.com/aghape/core/resource"
+	"github.com/aghape/core/test/utils"
 )
 
 var db = utils.TestDB()
@@ -31,8 +31,8 @@ func init() {
 	product.Meta(&exchange.Meta{Name: "Category.Name", Header: "Category"})
 }
 
-func newContext() *qor.Context {
-	return &qor.Context{DB: db}
+func newContext() *core.Context {
+	return &core.Context{DB: db}
 }
 
 func checkProduct(t *testing.T, filename string) {
@@ -133,7 +133,7 @@ func TestImportWithInvalidData(t *testing.T) {
 	product.Meta(&exchange.Meta{Name: "Price"})
 
 	product.AddValidator(&resource.Validator{
-		Handler: func(result interface{}, metaValues *resource.MetaValues, context *qor.Context) error {
+		Handler: func(result interface{}, metaValues *resource.MetaValues, context *core.Context) error {
 			if f, err := strconv.ParseFloat(fmt.Sprint(metaValues.Get("Price").Value), 64); err == nil {
 				if f == 0 {
 					return errors.New("product's price can't be env")
@@ -161,7 +161,7 @@ func TestProcessImportedData(t *testing.T) {
 	product.Meta(&exchange.Meta{Name: "Price"})
 
 	product.AddProcessor(&resource.Processor{
-		Handler: func(result interface{}, metaValues *resource.MetaValues, context *qor.Context) error {
+		Handler: func(result interface{}, metaValues *resource.MetaValues, context *core.Context) error {
 			product := result.(*tests.Product)
 			product.Price = float64(int(product.Price * 1.1)) // Add 10% Tax
 			return nil

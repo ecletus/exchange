@@ -6,14 +6,14 @@ Data can be optionally validated during import and export.
 
 Data can be optionally processed during import.
 
-[![GoDoc](https://godoc.org/github.com/qor/exchange?status.svg)](https://godoc.org/github.com/qor/exchange)
+[![GoDoc](https://godoc.org/github.com/aghape/exchange?status.svg)](https://godoc.org/github.com/aghape/exchange)
 
 ## Usage
 
 ```go
 import (
-  "github.com/qor/exchange"
-  "github.com/qor/exchange/backends/csv"
+  "github.com/aghape/exchange"
+  "github.com/aghape/exchange/backends/csv"
 )
 
 func main() {
@@ -25,7 +25,7 @@ func main() {
   product.Meta(&exchange.Meta{Name: "Price"})
 
   // Define context environment
-  context := &qor.Context{DB: db}
+  context := &core.Context{DB: db}
 
   // Import products into database from file `products.csv`
   product.Import(csv.New("products.csv"), context)
@@ -52,7 +52,7 @@ P003, Product P003, 300
 * Add Validations
 
 ```go
-product.AddValidator(func(result interface{}, metaValues *resource.MetaValues, context *qor.Context) error {
+product.AddValidator(func(result interface{}, metaValues *resource.MetaValues, context *core.Context) error {
   if f, err := strconv.ParseFloat(fmt.Sprint(metaValues.Get("Price").Value), 64); err == nil {
     if f == 0 {
       return errors.New("product's price can't be 0")
@@ -67,7 +67,7 @@ product.AddValidator(func(result interface{}, metaValues *resource.MetaValues, c
 * Process data before import
 
 ```go
-product.AddProcessor(func(result interface{}, metaValues *resource.MetaValues, context *qor.Context) error {
+product.AddProcessor(func(result interface{}, metaValues *resource.MetaValues, context *core.Context) error {
   product := result.(*Product)
   product.Price = product.Price * 1.1 // Add 10% Tax
   return nil

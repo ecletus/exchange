@@ -3,9 +3,9 @@ package exchange
 import (
 	"reflect"
 
-	"github.com/qor/qor"
-	"github.com/qor/qor/resource"
-	"github.com/qor/roles"
+	"github.com/aghape/core"
+	"github.com/aghape/core/resource"
+	"github.com/aghape/roles"
 )
 
 // Meta defines importable/exportable fields
@@ -14,8 +14,8 @@ type Meta struct {
 	resource.Meta
 	Name       string
 	Header     string
-	Valuer     func(interface{}, *qor.Context) interface{}
-	Setter     func(resource interface{}, metaValue *resource.MetaValue, context *qor.Context)
+	Valuer     func(interface{}, *core.Context) interface{}
+	Setter     func(resource interface{}, metaValue *resource.MetaValue, context *core.Context) error
 	Permission *roles.Permission
 }
 
@@ -31,7 +31,7 @@ func (meta *Meta) GetResource() resource.Resourcer {
 
 func (meta *Meta) updateMeta() {
 	meta.Meta = resource.Meta{
-		Name:         meta.Name,
+		MetaName:         &resource.MetaName{Name:meta.Name},
 		FieldName:    meta.FieldName,
 		Setter:       meta.Setter,
 		Valuer:       meta.Valuer,
@@ -54,7 +54,7 @@ func (meta *Meta) updateMeta() {
 		}
 	}
 
-	meta.SetFormattedValuer(func(record interface{}, context *qor.Context) interface{} {
+	meta.SetFormattedValuer(func(record interface{}, context *core.Context) interface{} {
 		if valuer := meta.GetValuer(); valuer != nil {
 			result := valuer(record, context)
 

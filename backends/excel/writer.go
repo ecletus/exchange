@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
-	"github.com/qor/exchange"
-	"github.com/qor/qor"
-	"github.com/qor/qor/resource"
-	"github.com/qor/roles"
+	"github.com/aghape/exchange"
+	"github.com/aghape/core"
+	"github.com/aghape/core/resource"
+	"github.com/aghape/roles"
 )
 
 // NewWriter new csv writer
-func (excel *Excel) NewWriter(res *exchange.Resource, context *qor.Context) (exchange.Writer, error) {
+func (excel *Excel) NewWriter(res *exchange.Resource, context *core.Context) (exchange.Writer, error) {
 	writer := &Writer{Excel: excel, Resource: res, context: context, sheetName: excel.config.SheetName}
 
 	var metas []*exchange.Meta
@@ -46,7 +46,7 @@ type Writer struct {
 	*Excel
 	currentRow int
 	sheetName  string
-	context    *qor.Context
+	context    *core.Context
 	metas      []*exchange.Meta
 	Resource   *exchange.Resource
 	Writer     *excelize.File

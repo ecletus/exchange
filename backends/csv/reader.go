@@ -5,13 +5,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/qor/exchange"
-	"github.com/qor/qor"
-	"github.com/qor/qor/resource"
+	"github.com/aghape/exchange"
+	"github.com/aghape/core"
+	"github.com/aghape/core/resource"
 )
 
 // NewReader new csv reader
-func (c *CSV) NewReader(res *exchange.Resource, context *qor.Context) (exchange.Rows, error) {
+func (c *CSV) NewReader(res *exchange.Resource, context *core.Context) (exchange.Rows, error) {
 	var rows = Rows{CSV: c, Resource: res}
 
 	readCloser, err := c.getReader()
