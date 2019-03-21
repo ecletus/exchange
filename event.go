@@ -1,6 +1,6 @@
 package exchange
 
-import "github.com/aghape/plug"
+import "github.com/ecletus/plug"
 
 var E_RESOURCE_ADDED = PKG + ".resourceAdded"
 

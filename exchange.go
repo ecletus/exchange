@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/aghape/plug"
+	"github.com/ecletus/plug"
 
 	"github.com/moisespsena/go-edis"
 	"github.com/moisespsena/go-path-helpers"
 
-	"github.com/aghape/core"
-	"github.com/aghape/core/resource"
-	"github.com/aghape/roles"
-	"github.com/aghape/validations"
+	"github.com/ecletus/core"
+	"github.com/ecletus/core/resource"
+	"github.com/ecletus/roles"
+	"github.com/ecletus/validations"
 	"github.com/moisespsena-go/aorm"
 )
 

@@ -1,8 +1,8 @@
 package tests
 
 import (
-	"github.com/aghape/exchange"
-	"github.com/aghape/core/test/utils"
+	"github.com/ecletus/exchange"
+	"github.com/ecletus/core/test/utils"
 )
 
 var (

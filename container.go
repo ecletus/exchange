@@ -1,8 +1,8 @@
 package exchange
 
 import (
-	"github.com/aghape/core"
-	"github.com/aghape/core/resource"
+	"github.com/ecletus/core"
+	"github.com/ecletus/core/resource"
 )
 
 // Container is an interface, any exporting/importing backends needs to implement this

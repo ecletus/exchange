@@ -3,9 +3,9 @@ package exchange
 import (
 	"reflect"
 
-	"github.com/aghape/core"
-	"github.com/aghape/core/resource"
-	"github.com/aghape/roles"
+	"github.com/ecletus/core"
+	"github.com/ecletus/core/resource"
+	"github.com/ecletus/roles"
 )
 
 // Meta defines importable/exportable fields

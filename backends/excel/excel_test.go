@@ -8,12 +8,12 @@ import (
 	"testing"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
-	"github.com/aghape/exchange"
-	"github.com/aghape/exchange/backends/excel"
-	"github.com/aghape/exchange/tests"
-	"github.com/aghape/core"
-	"github.com/aghape/core/resource"
-	"github.com/aghape/core/test/utils"
+	"github.com/ecletus/exchange"
+	"github.com/ecletus/exchange/backends/excel"
+	"github.com/ecletus/exchange/tests"
+	"github.com/ecletus/core"
+	"github.com/ecletus/core/resource"
+	"github.com/ecletus/core/test/utils"
 )
 
 var db = utils.TestDB()
