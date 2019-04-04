@@ -6,7 +6,7 @@ import (
 
 	"github.com/ecletus/plug"
 
-	"github.com/moisespsena/go-edis"
+	"github.com/moisespsena-go/edis"
 	"github.com/moisespsena-go/path-helpers"
 
 	"github.com/ecletus/core"
