@@ -113,7 +113,7 @@ func (res *Resource) Import(container Container, context *core.Context, callback
 		var current uint
 		var total = rows.Total()
 
-		if db := context.GetDB(); db != nil && !res.Config.DisableTransaction {
+		if db := context.DB(); db != nil && !res.Config.DisableTransaction {
 			tx := db.Begin()
 			context.SetDB(tx)
 			defer func() {
@@ -202,7 +202,7 @@ func (res *Resource) Export(container Container, context *core.Context, callback
 	var (
 		total   uint
 		results = res.NewSlice()
-		err     = context.GetDB().Find(results).Count(&total).Error
+		err     = context.DB().Find(results).Count(&total).Error
 	)
 
 	if err == nil {

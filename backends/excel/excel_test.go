@@ -32,7 +32,7 @@ func init() {
 }
 
 func newContext() *core.Context {
-	return &core.Context{DB: db}
+	return &core.Context{db: db}
 }
 
 func checkProduct(t *testing.T, filename string) {

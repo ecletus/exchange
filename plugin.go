@@ -18,7 +18,7 @@ func (p *Plugin) ProvideOptions() []string {
 	return []string{p.ExchangeKey}
 }
 
-func (p *Plugin) Init(options *plug.Options) {
+func (p *Plugin) ProvidesOptions(options *plug.Options) {
 	options.Set(p.ExchangeKey, &Exchange{
 		FakeDB:    options.GetInterface(p.FakeDBKey).(*aorm.DB),
 		resources: map[string]*Resource{},
